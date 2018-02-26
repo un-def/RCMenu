@@ -1,0 +1,7 @@
+Switch  | ^ i3-msg workspace number 10
+Volume  | amixer -M set Headphone toggle
+Volume  | amixer -M set Headphone 5%+
+Volume  | amixer -M set Headphone 5%-
+Player  | playerctl play-pause
+Player  | playerctl next
+Player  | playerctl previous
