@@ -18,7 +18,7 @@ class RCMenu:
         self.count = len(entries)
         root = tkinter.Tk(className='rcmenu')
         self.root = root
-        root.title('RCMenu')
+        root.title('rcmenu')
         root.bind('<Escape>', self.close)
         root.bind('<Up>', self.up)
         root.bind('<Down>', self.down)
