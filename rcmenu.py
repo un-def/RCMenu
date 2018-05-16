@@ -14,17 +14,13 @@ Entry = collections.namedtuple('Entry', 'name,command,close')
 class RCMenu:
 
     def __init__(self, entries):
-        self.entries = entries[:]
-        self.count = len(entries)
-        root = tkinter.Tk(className='rcmenu')
-        self.root = root
+        self.entries = tuple(entries)
+        self.root = root = tkinter.Tk(className='rcmenu')
         root.title('rcmenu')
         root.bind('<Escape>', self.close)
-        root.bind('<Up>', self.up)
-        root.bind('<Down>', self.down)
         root.bind('<Return>', self.submit)
         root.bind('<space>', self.submit)
-        listbox = tkinter.Listbox(
+        self.listbox = listbox = tkinter.Listbox(
             root,
             borderwidth=10,
             relief=tkinter.FLAT,
@@ -34,44 +30,24 @@ class RCMenu:
             selectbackground='#1e88e5',
             selectforeground='#bbdefb',
             font=('monospace', 40, 'bold'),
-            height=self.count,
+            height=len(self.entries),
             width=0,
         )
-        self.listbox = listbox
         listbox.pack()
         for entry in self.entries:
             listbox.insert(tkinter.END, entry.name)
-        self.current = 0
-        self.select_current()
+        listbox.select_set(0)
+        # listbox.focus()
 
     def run(self):
         self.root.mainloop()
 
-    def select_current(self):
-        self.listbox.selection_set(self.current)
-
-    def unselect_current(self):
-        self.listbox.selection_clear(self.current)
-
     def submit(self, event=None):
-        entry = self.entries[self.current]
+        selected = self.listbox.curselection()[0]
+        entry = self.entries[selected]
         subprocess.Popen(entry.command)
         if entry.close:
             self.close()
-
-    def up(self, event=None):
-        self.unselect_current()
-        self.current -= 1
-        if self.current < 0:
-            self.current = self.count - 1
-        self.select_current()
-
-    def down(self, event=None):
-        self.unselect_current()
-        self.current += 1
-        if self.current >= self.count:
-            self.current = 0
-        self.select_current()
 
     def close(self, event=None):
         self.root.destroy()
